@@ -4,9 +4,10 @@
 #
 # Changes from the version currently in the repo:
 #   Added after build-image-index (parallel with existing security scans):
-#     - acs-image-scan    (CVE record in ACS Central — persistent, dashboardable)
-#     - acs-image-check   (ACS policy gate — non-blocking, informational for now)
+#     - acs-image-scan     (CVE record in ACS Central — persistent, dashboardable)
+#     - acs-image-check    (ACS policy gate — non-blocking, informational for now)
 #     - upload-sbom-to-tpa (CycloneDX SBOM → TPA BOMbastic API)
+#     - show-sbom-rhdh     (surfaces SBOM in RHDH component CI view via task annotations)
 #
 # All upstream Konflux task bundle SHAs are taken verbatim from
 # the last successful PipelineRun: node-hello-world-on-push-bp8t2
@@ -575,6 +576,21 @@ spec:
       - name: sboms
         workspace: workspace
         subPath: sboms
+
+    - name: show-sbom-rhdh
+      runAfter: [build-image-index]
+      taskRef:
+        resolver: cluster
+        params:
+        - name: kind
+          value: task
+        - name: name
+          value: show-sbom-rhdh
+        - name: namespace
+          value: default-tenant
+      params:
+      - name: IMAGE_URL
+        value: $(tasks.build-image-index.results.IMAGE_URL)@$(tasks.build-image-index.results.IMAGE_DIGEST)
 
     workspaces:
     - name: workspace
