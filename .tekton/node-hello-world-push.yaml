@@ -601,6 +601,22 @@ spec:
     - name: netrc
       optional: true
 
+  taskRunSpecs:
+  - pipelineTaskName: build-container
+    stepSpecs:
+    - name: build
+      computeResources:
+        requests:
+          cpu: "2"
+    - name: push
+      computeResources:
+        requests:
+          cpu: 300m
+    - name: sbom-syft-generate
+      computeResources:
+        requests:
+          cpu: 500m
+
   taskRunTemplate:
     serviceAccountName: build-pipeline-node-hello-world
   workspaces:
