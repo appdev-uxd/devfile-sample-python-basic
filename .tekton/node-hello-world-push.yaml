@@ -387,6 +387,8 @@ spec:
         - name: kind
           value: task
       params:
+      - name: IMAGE
+        value: $(tasks.build-image-index.results.IMAGE_URL)@$(tasks.build-image-index.results.IMAGE_DIGEST)
       - name: image-digest
         value: $(tasks.build-image-index.results.IMAGE_DIGEST)
       - name: image-url
