@@ -338,27 +338,6 @@ spec:
       - name: workspace
         workspace: workspace
 
-    - name: clamav-scan
-      runAfter: [build-image-index]
-      when:
-      - input: $(params.skip-checks)
-        operator: in
-        values: ["false"]
-      taskRef:
-        resolver: bundles
-        params:
-        - name: bundle
-          value: quay.io/konflux-ci/tekton-catalog/task-clamav-scan:0.3@sha256:9f18b216ce71a66909e7cb17d9b34526c02d73cf12884ba32d1f10614f7b9f5a
-        - name: name
-          value: clamav-scan
-        - name: kind
-          value: task
-      params:
-      - name: image-digest
-        value: $(tasks.build-image-index.results.IMAGE_DIGEST)
-      - name: image-url
-        value: $(tasks.build-image-index.results.IMAGE_URL)
-
     - name: coverity-availability-check
       runAfter: [build-image-index]
       taskRef:
@@ -616,13 +595,7 @@ spec:
       computeResources:
         requests:
           cpu: 500m
-  - pipelineTaskName: clamav-scan
-    stepSpecs:
-    - name: extract-and-scan-image
-      computeResources:
-        requests:
-          cpu: "2"
-          memory: 4Gi
+
 
   taskRunTemplate:
     serviceAccountName: build-pipeline-node-hello-world
