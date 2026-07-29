@@ -616,6 +616,13 @@ spec:
       computeResources:
         requests:
           cpu: 500m
+  - pipelineTaskName: clamav-scan
+    stepSpecs:
+    - name: extract-and-scan-image
+      computeResources:
+        requests:
+          cpu: "2"
+          memory: 4Gi
 
   taskRunTemplate:
     serviceAccountName: build-pipeline-node-hello-world
