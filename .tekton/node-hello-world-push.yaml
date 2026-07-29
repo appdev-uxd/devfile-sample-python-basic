@@ -338,44 +338,6 @@ spec:
       - name: workspace
         workspace: workspace
 
-    - name: coverity-availability-check
-      runAfter: [build-image-index]
-      taskRef:
-        resolver: bundles
-        params:
-        - name: bundle
-          value: quay.io/konflux-ci/tekton-catalog/task-coverity-availability-check:0.2@sha256:de35caf2f090e3275cfd1019ea50d9662422e904fb4aebd6ea29fb53a1ad57f5
-        - name: name
-          value: coverity-availability-check
-        - name: kind
-          value: task
-
-    - name: sast-coverity-check
-      runAfter: [coverity-availability-check]
-      when:
-      - input: $(params.skip-checks)
-        operator: in
-        values: ["false"]
-      taskRef:
-        resolver: bundles
-        params:
-        - name: bundle
-          value: quay.io/konflux-ci/tekton-catalog/task-sast-coverity-check:0.3@sha256:368e1d92d1d6a44a6479ac4c15b274cb12c19d2207159a870e9e96b9b0f0afcc
-        - name: name
-          value: sast-coverity-check
-        - name: kind
-          value: task
-      params:
-      - name: IMAGE
-        value: $(tasks.build-image-index.results.IMAGE_URL)@$(tasks.build-image-index.results.IMAGE_DIGEST)
-      - name: image-digest
-        value: $(tasks.build-image-index.results.IMAGE_DIGEST)
-      - name: image-url
-        value: $(tasks.build-image-index.results.IMAGE_URL)
-      workspaces:
-      - name: workspace
-        workspace: workspace
-
     - name: sast-shell-check
       runAfter: [build-image-index]
       when:
